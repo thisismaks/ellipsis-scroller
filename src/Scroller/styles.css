@@ -1,0 +1,12 @@
+.parent {
+    width: 100%;
+    overflow: hidden;
+}
+
+.measure {
+    width: max-content;
+}
+
+.render {
+    width: unset;
+}
