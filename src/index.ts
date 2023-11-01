@@ -1,5 +1,3 @@
 import { Scroller } from './Scroller/Scroller';
 
-export {
-  Scroller,
-};
+export default Scroller;

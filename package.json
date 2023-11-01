@@ -1,31 +1,48 @@
 {
-  "name": "test-npm-2",
+  "name": "ellipsis-scroller",
   "version": "1.0.0",
-  "description": "",
-  "main": "./dist/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
+  "description": "React component that scrolls the text with ellipsis",
+  "author": "thisismaks",
   "license": "ISC",
+  "keywords": [
+    "react",
+    "react-component",
+    "text",
+    "ellipsis",
+    "scroller"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thisismaks/ellipsis-scroller"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "webpack",
+    "lint:eslint": "eslint . --ext .ts,.tsx,.js,.jsx --cache",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --cache --fix"
+  },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.2",
-    "@babel/preset-react": "^7.22.15",
-    "@babel/preset-typescript": "^7.23.2",
     "@types/react": "^18.2.33",
     "css-loader": "^6.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "style-loader": "^3.3.3",
+    "eslint": "^8.52.0",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "mini-css-extract-plugin": "^2.7.6",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*"
+    "@types/react": "^17.0.0 || ^18.0.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   },
   "files": [
     "dist"

@@ -1,12 +1,11 @@
-.parent {
-    width: 100%;
-    overflow: hidden;
-}
-
 .measure {
-    width: max-content;
+  width: max-content;
 }
 
 .render {
-    width: unset;
+  width: unset;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

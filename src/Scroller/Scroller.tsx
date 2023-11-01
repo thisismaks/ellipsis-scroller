@@ -1,82 +1,85 @@
-import React, {
+import {
+  cloneElement,
   forwardRef,
   useLayoutEffect,
   useRef,
   useState,
   ComponentProps,
-  ReactNode,
+  isValidElement,
+  createElement,
+  useMemo,
 } from 'react';
-import './styles.css';
+import { render, measure } from './styles.css';
+import { useForkRef } from './useForkRef';
 
-const combineClasses = (...args: Array<string | undefined | boolean>): string => args.join(' ');
+const classes = {
+  render,
+  measure,
+};
 
 export interface ScrollerProps extends ComponentProps<'div'> {
-  children: ReactNode
+  speed?: number
+  delay?: number
 }
 
-const scroll_margin = 24;
-const in_pace = 10;
-const out_pace = 2;
-
-export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(({
+export const Scroller = forwardRef<HTMLElement, ScrollerProps>(({
+  speed = 100,
+  delay = 0,
   style,
   children,
-  className,
   ...rest
 }, forwardedRef) => {
-  const parentRef = useRef<HTMLDivElement>(null);
-  const childRef = useRef<HTMLDivElement>();
-  const scrollOffset = useRef(0);
-
-  // const ref = useForkRef(forwardedRef, parentRef);
+  const elementRef = useRef<HTMLDivElement>();
+  const forkRef = useForkRef(forwardedRef, elementRef);
 
   const [phase, setPhase] = useState<'render' | 'measure'>('render');
   const [hover, setHover] = useState(false);
 
-  useLayoutEffect(
-    () => {
-      if (phase === 'measure') {
-        const parentWidth = parentRef.current?.offsetWidth;
-        const childWidth = childRef.current?.offsetWidth;
-        scrollOffset.current = parentWidth < childWidth
-          ? childWidth - parentWidth + scroll_margin
-          : 0;
-        setPhase('render');
-      }
-    },
-    [phase],
-  );
+  const renderWidth = useRef(0);
+  const textIndent = useRef(0);
 
-  const handleMouseEnter = () => {
+  useLayoutEffect(() => {
+    if ('measure' === phase) {
+      const fullWidth = elementRef.current!.offsetWidth;
+      textIndent.current = fullWidth > renderWidth.current
+        ? fullWidth - renderWidth.current + 1
+        : 0;
+      setPhase('render');
+    }
+  }, [phase]);
+
+  const { forward, backward } = useMemo(() => ({
+    forward: {
+      textIndent: `-${textIndent.current}px`,
+      transition: `text-indent ${textIndent.current / speed}s linear ${delay}ms`,
+    },
+    backward: {
+      transition: `text-indent ${textIndent.current / speed * 0.2}s linear`,
+    },
+  }), [speed, delay, textIndent.current]);
+
+  const onMouseEnter = () => {
+    renderWidth.current = elementRef.current!.offsetWidth;
     setPhase('measure');
     setHover(true);
   };
 
-  const handleMouseLeave = () => {
+  const onMouseLeave = () => {
     setHover(false);
   };
 
-  const scrollStyle = hover ? {
-    textIndent: `-${scrollOffset.current}px`,
-    transition: `all ${scrollOffset.current * in_pace}ms linear`,
-  } : {
-    transition: `all ${scrollOffset.current * out_pace}ms linear`,
+  const props = {
+    ref: forkRef,
+    onMouseEnter,
+    onMouseLeave,
+    className: classes[phase],
+    style: { ...(hover ? forward : backward), ...style },
+    ...rest,
   };
 
-  return (
-    <div
-      ref={parentRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={combineClasses('parent', className)}
-      style={{ ...scrollStyle, ...style }}
-      {...rest}
-    >
-      <div ref={childRef} className={phase}>
-        {children}
-      </div>
-    </div>
-  );
+  return isValidElement(children)
+    ? cloneElement(children, props)
+    : createElement('div', props, children);
 });
 
 Scroller.displayName = 'Scroller';
