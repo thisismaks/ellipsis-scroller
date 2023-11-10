@@ -24,4 +24,4 @@ export default function App() {
 ## CodeSandbox
 [Base demo](https://codesandbox.io/s/ellipsis-scroller-base-demo-sfss86)
 
-[MUI List demo](https://codesandbox.io/s/ellipsis-scroller-demo-q3tpwf)
+[MUI MenuList demo](https://codesandbox.io/s/ellipsis-scroller-demo-q3tpwf)
